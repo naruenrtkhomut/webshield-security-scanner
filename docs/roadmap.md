@@ -5,9 +5,11 @@
 - [x] Repository structure
 - [x] CLI skeleton
 - [x] Core scanner orchestration
+- [x] Transport security and HTTPS redirect check
 - [x] Security header checks
 - [x] Cookie flag checks
 - [x] Swagger/OpenAPI exposure check
+- [x] Sensitive file exposure check
 - [x] Markdown report writer
 - [x] Unit test project
 - [x] GitHub Actions CI
