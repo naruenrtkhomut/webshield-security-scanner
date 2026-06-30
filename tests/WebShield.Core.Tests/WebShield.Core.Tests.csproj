@@ -14,5 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\WebShield.Core\WebShield.Core.csproj" />
+    <ProjectReference Include="..\..\src\WebShield.Reporting\WebShield.Reporting.csproj" />
   </ItemGroup>
 </Project>
