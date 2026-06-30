@@ -45,6 +45,7 @@ The first version focuses on safe, non-destructive checks:
 
 WebShield includes a dedicated testing documentation set for contributors, maintainers, and release validation:
 
+- [Security Scan Upgrade Notes](docs/security-scan-upgrades.md) — summary of the expanded defensive scan checks and automation features
 - [Testing Strategy](docs/testing-strategy.md) — unit, component, integration, manual QA, regression, and CI quality gates
 - [Manual Testing Guide](docs/manual-testing-guide.md) — safe hands-on validation commands and release QA checklist
 - [Test Case Matrix](docs/test-case-matrix.md) — detailed expected behavior for scanner core, checks, CLI, reporting, and docs
