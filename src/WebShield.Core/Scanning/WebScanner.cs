@@ -15,7 +15,8 @@ public sealed class WebScanner
         [
             new SecurityHeadersCheck(),
             new CookieSecurityCheck(),
-            new SwaggerExposureCheck()
+            new SwaggerExposureCheck(),
+            new SensitiveFileExposureCheck()
         ];
     }
 
