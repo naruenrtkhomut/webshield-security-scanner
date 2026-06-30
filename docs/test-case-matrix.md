@@ -38,6 +38,16 @@ The matrix should be updated whenever a new security check, report format, CLI o
 | SCORE-005 | Score calculation | One Critical finding | Score loses 40 points | Unit | P1 |
 | SCORE-006 | Score calculation | Many findings exceed 100 penalty | Score does not go below 0 | Unit | P0 |
 
+## Transport Security
+
+| ID | Area | Scenario | Expected Result | Type | Priority |
+|---|---|---|---|---|---|
+| TLS-001 | HTTPS usage | Target uses `https://` | Info finding confirms HTTPS is enabled | Unit | P0 |
+| TLS-002 | HTTP usage | Target uses `http://` and final URL remains HTTP | Medium finding is returned | Unit | P0 |
+| TLS-003 | HTTP redirect | Target uses `http://` and final URL is HTTPS | Info finding confirms HTTP redirects to HTTPS | Unit | P0 |
+| TLS-004 | Evidence | Any transport finding is returned | Evidence includes initial target and final URL only | Unit | P1 |
+| TLS-005 | Recommendation | HTTP does not redirect to HTTPS | Recommendation tells user to enable HTTPS and redirect HTTP | Unit | P1 |
+
 ## HTTP Security Headers
 
 | ID | Area | Scenario | Expected Result | Type | Priority |
