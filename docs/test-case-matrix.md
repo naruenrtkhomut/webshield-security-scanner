@@ -76,6 +76,38 @@ The matrix should be updated whenever a new security check, report format, CLI o
 | COOKIE-007 | Multiple cookies | One secure cookie and one weak cookie | Finding only for weak cookie | Unit | P1 |
 | COOKIE-008 | Attribute casing | Cookie uses lowercase attributes | Attributes are still recognized | Unit | P1 |
 
+## CORS Policy
+
+| ID | Area | Scenario | Expected Result | Type | Priority |
+|---|---|---|---|---|---|
+| CORS-001 | No CORS | No CORS headers are present | Informational finding is returned | Unit | P1 |
+| CORS-002 | Wildcard origin | `Access-Control-Allow-Origin: *` is present | Low finding is returned | Unit | P0 |
+| CORS-003 | Wildcard with credentials | Wildcard origin and credentials are enabled | High finding is returned | Unit | P0 |
+| CORS-004 | Null origin | Origin includes `null` | Medium finding is returned | Unit | P0 |
+| CORS-005 | Explicit origin | Explicit non-wildcard origin is present | Informational finding is returned | Unit | P1 |
+| CORS-006 | Evidence | CORS finding is returned | Evidence includes CORS headers only | Unit | P1 |
+
+## Information Disclosure Headers
+
+| ID | Area | Scenario | Expected Result | Type | Priority |
+|---|---|---|---|---|---|
+| INFO-001 | Server header | `Server` header is present | Low finding is returned | Unit | P0 |
+| INFO-002 | Framework header | `X-Powered-By` header is present | Low finding is returned | Unit | P0 |
+| INFO-003 | ASP.NET version | `X-AspNet-Version` header is present | Low finding is returned | Unit | P1 |
+| INFO-004 | MVC version | `X-AspNetMvc-Version` header is present | Low finding is returned | Unit | P1 |
+| INFO-005 | Generator header | `X-Generator` header is present | Low finding is returned | Unit | P1 |
+| INFO-006 | No disclosure | No disclosure headers are present | Informational finding is returned | Unit | P1 |
+
+## Cache Policy
+
+| ID | Area | Scenario | Expected Result | Type | Priority |
+|---|---|---|---|---|---|
+| CACHE-001 | Missing policy | `Cache-Control` is missing | Low finding is returned | Unit | P0 |
+| CACHE-002 | Public with cookie | Response has `Cache-Control: public` and `Set-Cookie` | Medium finding is returned | Unit | P0 |
+| CACHE-003 | Private policy | Response has `Cache-Control: private` | Informational finding is returned | Unit | P1 |
+| CACHE-004 | No-store policy | Response has `Cache-Control: no-store` | Informational finding is returned | Unit | P1 |
+| CACHE-005 | Evidence | Cache finding is returned | Evidence includes cache policy and cookie observation only | Unit | P1 |
+
 ## Swagger/OpenAPI Exposure
 
 | ID | Area | Scenario | Expected Result | Type | Priority |
@@ -111,10 +143,14 @@ The matrix should be updated whenever a new security check, report format, CLI o
 | CLI-003 | Missing target | Run `scan` without URL | Error and usage are printed | Integration | P0 |
 | CLI-004 | Invalid target | Run `scan not-a-url` | Invalid URL message is printed | Integration | P0 |
 | CLI-005 | Valid target | Run scan against safe target | Results are printed | Integration | P0 |
-| CLI-006 | High findings | Scan has High finding | Exit code is 2 | Integration | P1 |
-| CLI-007 | No High findings | Scan has Info/Low/Medium only | Exit code is 0 | Integration | P1 |
-| CLI-008 | Report option | Use `--report reports/example.md` | Markdown report is written | Integration | P0 |
-| CLI-009 | Timeout option | Use `--timeout 3` | HttpClient timeout is applied | Manual | P1 |
+| CLI-006 | Default quality gate | Scan has High finding | Exit code is 2 | Integration | P1 |
+| CLI-007 | No gate failure | Scan has Info/Low/Medium only and default fail threshold is High | Exit code is 0 | Integration | P1 |
+| CLI-008 | Markdown report option | Use `--report reports/example.md` | Markdown report is written | Integration | P0 |
+| CLI-009 | JSON report option | Use `--json reports/example.json` | JSON report is written | Integration | P0 |
+| CLI-010 | Medium quality gate | Use `--fail-on Medium` and Medium finding exists | Exit code is 2 | Integration | P0 |
+| CLI-011 | No-fail mode | Use `--no-fail` | Exit code is 0 after completed scan | Integration | P0 |
+| CLI-012 | Timeout option | Use `--timeout 3` | HttpClient timeout is applied | Manual | P1 |
+| CLI-013 | Invalid severity | Use `--fail-on Invalid` | Error message is printed and exit code is 1 | Integration | P1 |
 
 ## Reporting
 
@@ -128,6 +164,9 @@ The matrix should be updated whenever a new security check, report format, CLI o
 | REPORT-006 | Ordering | Multiple findings exist | Findings are ordered by severity | Unit | P1 |
 | REPORT-007 | Disclaimer | Generate report | Report includes defensive scanner disclaimer | Unit | P1 |
 | REPORT-008 | Secret handling | Evidence contains sensitive-looking content | Report should avoid storing full secret-bearing response bodies | Unit | P0 |
+| REPORT-009 | JSON metadata | Generate JSON report | JSON includes target, timestamps, score, summary, and findings | Unit | P0 |
+| REPORT-010 | JSON severity | Finding has severity | JSON writes severity as a readable string | Unit | P0 |
+| REPORT-011 | JSON ordering | Multiple findings exist | JSON findings are ordered by severity then title | Unit | P1 |
 
 ## Documentation and Product Readiness
 
@@ -138,6 +177,7 @@ The matrix should be updated whenever a new security check, report format, CLI o
 | DOC-003 | Contributing | Contributor wants to add check | CONTRIBUTING.md explains defensive scope | Manual | P1 |
 | DOC-004 | Sponsorship | Potential sponsor wants to support | README links sponsorship docs | Manual | P1 |
 | DOC-005 | Testing | Contributor wants to test | README links testing docs | Manual | P1 |
+| DOC-006 | Security checks | User wants scan coverage | `docs/security-checks.md` documents each check and severity | Manual | P1 |
 
 ## Acceptance Criteria for CI
 
@@ -147,6 +187,7 @@ Minimum release gate:
 
 - All P0 tests pass.
 - All P1 tests pass or have documented exceptions.
-- CLI can generate a report.
+- CLI can generate Markdown and JSON reports.
+- Quality gate behavior is predictable.
 - No test depends on unauthorized public targets.
 - No test adds offensive behavior.
