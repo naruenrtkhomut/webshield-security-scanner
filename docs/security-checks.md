@@ -2,6 +2,18 @@
 
 This document defines the first safe checks for WebShield.
 
+## Transport Security
+
+WebShield checks whether the target uses HTTPS or whether an HTTP target redirects to HTTPS during the baseline request.
+
+| Condition | Finding | Initial severity |
+|---|---|---|
+| Target URL uses `https://` | HTTPS is enabled for the target URL | Info |
+| Target URL uses `http://` and final URL is `https://` | HTTP redirects to HTTPS | Info |
+| Target URL uses `http://` and final URL is still `http://` or unknown | Target does not use HTTPS | Medium |
+
+This check does not inspect certificate chains or perform TLS protocol probing yet. It is a baseline transport security signal for developer-friendly reports.
+
 ## HTTP Security Headers
 
 | Header | Risk when missing | Initial severity |
@@ -34,14 +46,14 @@ This check does not exploit the API. It only reports whether public API document
 
 ## Sensitive File Exposure
 
-Future safe checks may include:
+WebShield checks a small baseline set of common sensitive paths:
 
 - `/.env`
 - `/.git/config`
 - `/backup.zip`
 - `/database.sql`
 
-These checks must stay low-volume and transparent.
+These checks must stay low-volume and transparent. Evidence should report the reachable URL only, not the full file contents.
 
 ## Severity Guide
 
