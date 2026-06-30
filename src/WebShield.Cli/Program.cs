@@ -38,7 +38,8 @@ static async Task<int> RunAsync(string[] args)
     var noFail = HasOption(args, "--no-fail");
     var failOnOption = GetOptionValue(args, "--fail-on") ?? Severity.High.ToString();
 
-    if (!Enum.TryParse<Severity>(failOnOption, ignoreCase: true, out var failOnSeverity))
+    if (!Enum.TryParse<Severity>(failOnOption, ignoreCase: true, out var failOnSeverity) ||
+        !Enum.IsDefined(typeof(Severity), failOnSeverity))
     {
         Console.Error.WriteLine($"Invalid severity for --fail-on: {failOnOption}");
         Console.Error.WriteLine("Allowed values: Info, Low, Medium, High, Critical");
@@ -48,6 +49,12 @@ static async Task<int> RunAsync(string[] args)
     var timeoutSeconds = int.TryParse(GetOptionValue(args, "--timeout"), out var parsedTimeout)
         ? parsedTimeout
         : 15;
+
+    if (timeoutSeconds <= 0)
+    {
+        Console.Error.WriteLine("Invalid timeout. --timeout must be greater than 0 seconds.");
+        return 1;
+    }
 
     using var httpClient = new HttpClient
     {
