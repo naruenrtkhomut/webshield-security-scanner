@@ -48,27 +48,52 @@ Expected result:
 
 - CLI starts successfully.
 - Target URL is printed.
+- Fail-on severity is printed.
 - Score is printed.
 - Findings are grouped by severity in readable output.
 - No unhandled exception appears.
 
-## Markdown Report Test
+## Markdown and JSON Report Test
 
 Run:
 
 ```bash
-dotnet run --project src/WebShield.Cli -- scan https://example.com --report reports/example.md
+dotnet run --project src/WebShield.Cli -- scan https://example.com --report reports/example.md --json reports/example.json
 ```
 
 Expected result:
 
 - `reports/example.md` is created.
-- Report includes target URL.
-- Report includes started and finished timestamps.
-- Report includes score.
-- Report includes findings.
+- `reports/example.json` is created.
+- Markdown report includes target URL, timestamps, score, findings, and disclaimer.
+- JSON report includes target, started time, finished time, score, summary, and findings.
 - Each finding includes description, impact, recommendation, and evidence.
-- Report does not contain secrets or excessive response bodies.
+- Reports do not contain secrets or excessive response bodies.
+
+## Quality Gate Test
+
+Run:
+
+```bash
+dotnet run --project src/WebShield.Cli -- scan https://example.com --json reports/example.json --fail-on Medium
+```
+
+Expected result:
+
+- CLI returns exit code `2` when at least one finding is Medium, High, or Critical.
+- CLI returns exit code `0` when no finding meets the threshold.
+- JSON report is still written when a quality gate fails.
+
+Run with failure disabled:
+
+```bash
+dotnet run --project src/WebShield.Cli -- scan https://example.com --json reports/example.json --no-fail
+```
+
+Expected result:
+
+- CLI returns exit code `0` after a completed scan.
+- Findings are still printed and written to report outputs.
 
 ## Timeout Test
 
@@ -149,6 +174,59 @@ Test cases:
 | Missing `SameSite` | Low finding |
 | Has `Secure`, `HttpOnly`, and `SameSite` | No cookie warning for that cookie |
 
+## CORS Policy Test
+
+Use a local app that can return different CORS headers.
+
+Test cases:
+
+| CORS configuration | Expected behavior |
+|---|---|
+| No `Access-Control-Allow-Origin` | Informational finding only |
+| `Access-Control-Allow-Origin: *` | Low finding |
+| `Access-Control-Allow-Origin: *` plus `Access-Control-Allow-Credentials: true` | High finding |
+| `Access-Control-Allow-Origin: null` | Medium finding |
+| Explicit trusted origin | Informational finding |
+
+CORS behavior may differ by route and method, so API endpoints should be tested separately during manual QA.
+
+## Information Disclosure Header Test
+
+Use a local app or reverse proxy that can add and remove disclosure headers.
+
+Headers checked:
+
+- `Server`
+- `X-Powered-By`
+- `X-AspNet-Version`
+- `X-AspNetMvc-Version`
+- `X-Generator`
+
+Expected result when a checked header is present:
+
+- Scanner reports `Technology disclosure header observed`.
+- Finding severity is Low.
+- Evidence includes the header name and value.
+
+Expected result when none are present:
+
+- Scanner reports an informational no-disclosure finding.
+
+## Cache Policy Test
+
+Use a local app that can return different caching directives.
+
+Test cases:
+
+| Cache behavior | Expected result |
+|---|---|
+| Missing `Cache-Control` | Low finding |
+| `Cache-Control: public` with `Set-Cookie` | Medium finding |
+| `Cache-Control: private` | Informational finding |
+| `Cache-Control: no-store` | Informational finding |
+
+Cache findings are baseline hardening signals. Sensitive and authenticated routes should be reviewed separately.
+
 ## Swagger/OpenAPI Exposure Test
 
 Use a local app that exposes Swagger in development mode.
@@ -201,6 +279,8 @@ After generating a report, verify:
 - [ ] Findings are ordered by severity.
 - [ ] Each finding has practical remediation.
 - [ ] Evidence is concise.
+- [ ] JSON output is machine-readable.
+- [ ] Quality gate behavior is predictable.
 - [ ] The report explains that it is not a full penetration test.
 - [ ] The report is suitable to share with a developer or client.
 
@@ -214,6 +294,9 @@ Before tagging a release:
 - [ ] Run CLI help.
 - [ ] Run a scan against a safe local target.
 - [ ] Generate a Markdown report.
+- [ ] Generate a JSON report.
+- [ ] Check `--fail-on` behavior.
+- [ ] Check `--no-fail` behavior.
 - [ ] Check exit codes.
 - [ ] Review README quick start.
 - [ ] Review `SECURITY.md` and legal/ethical use docs.
@@ -234,7 +317,8 @@ Command used:
 Expected result:
 Actual result:
 Exit code:
-Report path:
+Markdown report path:
+JSON report path:
 Issues found:
 Follow-up required:
 ```
