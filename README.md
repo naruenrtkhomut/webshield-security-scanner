@@ -32,10 +32,14 @@ The first version focuses on safe, non-destructive checks:
 - Transport security and HTTPS redirect checks
 - HTTP security headers
 - Cookie flags
+- CORS policy review
+- Information disclosure header detection
+- Cache policy hardening checks
 - Swagger/OpenAPI public exposure checks
 - Common sensitive file exposure checks
 - Risk score and severity classification
-- Markdown report export
+- Markdown and JSON report export
+- CI/CD quality gate with configurable fail severity
 
 ## Testing and Quality
 
@@ -92,10 +96,22 @@ dotnet build
 dotnet run --project src/WebShield.Cli -- scan https://example.com
 ```
 
-Generate a Markdown report:
+Generate Markdown and JSON reports:
 
 ```bash
-dotnet run --project src/WebShield.Cli -- scan https://example.com --report reports/example.md
+dotnet run --project src/WebShield.Cli -- scan https://example.com --report reports/example.md --json reports/example.json
+```
+
+Use WebShield as a CI/CD quality gate:
+
+```bash
+dotnet run --project src/WebShield.Cli -- scan https://example.com --json reports/example.json --fail-on Medium
+```
+
+Disable quality-gate failure while still generating reports:
+
+```bash
+dotnet run --project src/WebShield.Cli -- scan https://example.com --json reports/example.json --no-fail
 ```
 
 ## Example Output
@@ -103,12 +119,15 @@ dotnet run --project src/WebShield.Cli -- scan https://example.com --report repo
 ```text
 WebShield Security Scanner
 Target: https://example.com
+Fail-on severity: High
 
 [High] Missing Content-Security-Policy
 [Medium] Missing X-Frame-Options
+[Low] Wildcard CORS origin observed
 [Info] HTTPS is enabled for the target URL
 
-Report written to reports/example.md
+Markdown report written to reports/example.md
+JSON report written to reports/example.json
 ```
 
 ## Suggested Product Positioning
