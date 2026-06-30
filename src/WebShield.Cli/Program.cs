@@ -58,7 +58,7 @@ static async Task<int> RunAsync(string[] args)
 
     Console.WriteLine("WebShield Security Scanner");
     Console.WriteLine($"Target: {target}");
-    Console.WriteLine($"Fail-on severity: {(noFail ? "disabled" : failOnSeverity)}");
+    Console.WriteLine($"Fail-on severity: {(noFail ? "disabled" : failOnSeverity.ToString())}");
     Console.WriteLine();
 
     var scanner = new WebScanner(httpClient);
