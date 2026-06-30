@@ -8,9 +8,15 @@
 - [x] Transport security and HTTPS redirect check
 - [x] Security header checks
 - [x] Cookie flag checks
+- [x] CORS policy check
+- [x] Information disclosure header check
+- [x] Cache policy check
 - [x] Swagger/OpenAPI exposure check
 - [x] Sensitive file exposure check
 - [x] Markdown report writer
+- [x] JSON report writer
+- [x] Configurable CI/CD quality gate with `--fail-on`
+- [x] Non-failing reporting mode with `--no-fail`
 - [x] Unit test project
 - [x] GitHub Actions CI
 
@@ -22,12 +28,14 @@
 - [ ] Add HTML report export
 - [ ] Add risk score summary
 - [ ] Add executive summary section
+- [ ] Add remediation snippets by platform
 
 ## Phase 3: API and CI/CD Mode
 
 - [ ] OpenAPI/Swagger schema parsing
-- [ ] CI quality gate mode
-- [ ] JSON output for automation
+- [x] CI quality gate mode
+- [x] JSON output for automation
+- [ ] SARIF output for GitHub code scanning workflows
 - [ ] Azure DevOps pipeline example
 - [ ] GitHub Actions usage template
 
@@ -39,6 +47,7 @@
 - [ ] Sample vulnerable app for demo only
 - [ ] Release packaging
 - [ ] Versioned changelog
+- [ ] Sponsor update posts
 
 ## Phase 5: SaaS Option
 
