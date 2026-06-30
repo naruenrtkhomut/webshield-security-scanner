@@ -84,7 +84,7 @@ public sealed class CachePolicyCheck : IWebSecurityCheck
             return responseValues.ToArray();
         }
 
-        if (response.Content.Headers.TryGetValues(headerName, out var contentValues))
+        if (response.Content?.Headers.TryGetValues(headerName, out var contentValues) == true)
         {
             return contentValues.ToArray();
         }
