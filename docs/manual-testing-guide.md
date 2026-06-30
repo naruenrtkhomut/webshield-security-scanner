@@ -99,6 +99,24 @@ Expected result:
 - User receives a clear invalid URL message.
 - No scan starts.
 
+## Transport Security Test
+
+Use a local app or owned staging environment that can be reached over HTTP and HTTPS.
+
+Test cases:
+
+| Target behavior | Expected scanner result |
+|---|---|
+| Target URL starts with `https://` | Informational finding: `HTTPS is enabled for the target URL` |
+| Target URL starts with `http://` and redirects to `https://` | Informational finding: `HTTP redirects to HTTPS` |
+| Target URL starts with `http://` and does not redirect to HTTPS | Medium finding: `Target does not use HTTPS` |
+
+Expected evidence:
+
+- Initial target URL is shown.
+- Final URL is shown when available.
+- No certificate details, secrets, or response body content are stored.
+
 ## HTTP Security Header Test
 
 Use a local server with intentionally missing security headers.
