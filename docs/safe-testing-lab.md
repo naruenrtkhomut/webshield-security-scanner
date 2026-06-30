@@ -8,15 +8,19 @@ The lab is intentionally focused on defensive validation. It should help maintai
 
 A safe WebShield lab should let contributors test:
 
+- HTTP and HTTPS baseline behavior
 - Missing and present HTTP security headers
 - Secure and insecure cookie attributes
+- CORS policy variants
+- Information disclosure headers
+- Cache policy variants
 - Public and restricted Swagger/OpenAPI endpoints
 - Public and blocked sensitive file paths
 - CLI output
-- Markdown report output
+- Markdown and JSON report output
+- Quality-gate exit codes
 - Error handling
 - Timeout handling
-- Exit codes
 
 ## Lab Boundaries
 
@@ -49,11 +53,18 @@ The sample app should expose predictable endpoints for scanner validation.
 
 | Endpoint | Purpose | Expected scanner behavior |
 |---|---|---|
-| `/` | Baseline homepage | Security header and cookie checks inspect this response |
+| `/` | Baseline homepage | Default checks inspect this response |
 | `/secure-headers` | Response with all baseline headers | Missing-header findings should not appear |
 | `/missing-headers` | Response with no hardening headers | Missing-header findings should appear |
 | `/cookie-secure` | Sets secure cookie flags | Cookie warnings should not appear for that cookie |
 | `/cookie-insecure` | Sets weak cookie flags | Cookie warnings should appear |
+| `/cors-none` | Sends no CORS headers | Informational CORS finding |
+| `/cors-wildcard` | Sends `Access-Control-Allow-Origin: *` | Low CORS finding |
+| `/cors-wildcard-credentials` | Sends wildcard origin and credentials | High CORS finding |
+| `/cors-null` | Sends null origin | Medium CORS finding |
+| `/disclosure-headers` | Sends `Server` or `X-Powered-By` | Low information disclosure finding |
+| `/cache-missing` | Sends no `Cache-Control` header | Low cache policy finding |
+| `/cache-public-cookie` | Sends public cache policy and cookie | Medium cache policy finding |
 | `/swagger/index.html` | Simulates public Swagger UI | Swagger exposure finding should appear |
 | `/openapi.json` | Simulates public OpenAPI document | Swagger/OpenAPI exposure finding should appear |
 | `/.env` | Simulates accidental sensitive file exposure | Sensitive file exposure finding should appear |
@@ -68,17 +79,19 @@ Start the local test target:
 dotnet run --project samples/WebShield.TestTarget
 ```
 
-Run WebShield:
+Run WebShield with Markdown and JSON output:
 
 ```bash
-dotnet run --project src/WebShield.Cli -- scan http://localhost:5000 --report reports/local-lab.md
+dotnet run --project src/WebShield.Cli -- scan http://localhost:5000 --report reports/local-lab.md --json reports/local-lab.json --fail-on Medium
 ```
 
 Expected result:
 
 - Scan completes.
 - Findings match intentionally configured endpoints.
-- Report is generated.
+- Markdown report is generated.
+- JSON report is generated.
+- Quality gate returns a predictable exit code.
 - No real secrets are created or exposed.
 
 ## Controlled Sensitive File Simulation
@@ -144,7 +157,7 @@ Desired commands:
 ```bash
 docker compose up --build
 
-dotnet run --project src/WebShield.Cli -- scan http://localhost:8080 --report reports/docker-lab.md
+dotnet run --project src/WebShield.Cli -- scan http://localhost:8080 --report reports/docker-lab.md --json reports/docker-lab.json --fail-on Medium
 ```
 
 The Docker lab should be optional and must not be required for the basic unit test suite.
@@ -157,5 +170,7 @@ The lab is acceptable when:
 - It contains no real secrets.
 - It has predictable responses.
 - It supports both positive and negative scanner cases.
+- It generates Markdown and JSON reports.
+- It validates quality-gate behavior.
 - It documents every intentionally weak endpoint.
 - It reinforces authorized defensive testing.
