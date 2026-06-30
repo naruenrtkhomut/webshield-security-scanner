@@ -13,6 +13,7 @@ public sealed class WebScanner
         _httpClient = httpClient;
         _checks = checks ??
         [
+            new TransportSecurityCheck(),
             new SecurityHeadersCheck(),
             new CookieSecurityCheck(),
             new SwaggerExposureCheck(),
