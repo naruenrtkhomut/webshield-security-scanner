@@ -4,6 +4,20 @@ Developer-first web security audit and vulnerability reporting tool for websites
 
 > WebShield is designed for defensive security testing on systems you own or are explicitly authorized to test. It is not an exploit framework, brute-force tool, or mass scanning tool.
 
+## Support This Project
+
+If WebShield helps you improve your web application security workflow, consider supporting development through GitHub Sponsors.
+
+Your sponsorship helps fund:
+
+- New defensive security checks
+- Better Markdown, HTML, and PDF reports
+- CI/CD integration examples
+- ASP.NET Core, Angular, Nginx, Docker, and Kubernetes remediation guides
+- Documentation, examples, and maintenance
+
+See [docs/sponsorship.md](docs/sponsorship.md) for suggested sponsor tiers and what the funding supports.
+
 ## Goals
 
 - Help developers find common web security misconfigurations before production.
@@ -38,7 +52,9 @@ The public version intentionally excludes:
 
 ```text
 webshield-security-scanner/
-├── .github/workflows/        # CI pipeline
+├── .github/
+│   ├── FUNDING.yml           # GitHub Sponsors button configuration
+│   └── workflows/            # CI pipeline
 ├── docs/                     # Architecture, roadmap, security scope
 ├── src/
 │   ├── WebShield.Cli/        # CLI entry point
@@ -84,6 +100,10 @@ Report written to reports/example.md
 
 **WebShield Security Scanner**  
 A developer-first web security audit and vulnerability reporting tool for websites, APIs, and modern web applications.
+
+## Contributing
+
+Contributions are welcome when they align with the project's defensive security scope. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
