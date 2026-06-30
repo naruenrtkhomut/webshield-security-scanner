@@ -29,9 +29,9 @@ See [docs/sponsorship.md](docs/sponsorship.md) for suggested sponsor tiers and w
 
 The first version focuses on safe, non-destructive checks:
 
+- Transport security and HTTPS redirect checks
 - HTTP security headers
 - Cookie flags
-- HTTPS/TLS availability summary
 - Swagger/OpenAPI public exposure checks
 - Common sensitive file exposure checks
 - Risk score and severity classification
@@ -104,9 +104,9 @@ dotnet run --project src/WebShield.Cli -- scan https://example.com --report repo
 WebShield Security Scanner
 Target: https://example.com
 
-[Medium] Missing Content-Security-Policy
-[Low] Missing X-Frame-Options
-[Info] HTTPS is enabled
+[High] Missing Content-Security-Policy
+[Medium] Missing X-Frame-Options
+[Info] HTTPS is enabled for the target URL
 
 Report written to reports/example.md
 ```
