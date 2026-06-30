@@ -37,6 +37,21 @@ The first version focuses on safe, non-destructive checks:
 - Risk score and severity classification
 - Markdown report export
 
+## Testing and Quality
+
+WebShield includes a dedicated testing documentation set for contributors, maintainers, and release validation:
+
+- [Testing Strategy](docs/testing-strategy.md) — unit, component, integration, manual QA, regression, and CI quality gates
+- [Manual Testing Guide](docs/manual-testing-guide.md) — safe hands-on validation commands and release QA checklist
+- [Test Case Matrix](docs/test-case-matrix.md) — detailed expected behavior for scanner core, checks, CLI, reporting, and docs
+- [Safe Testing Lab Guide](docs/safe-testing-lab.md) — localhost-first lab design for authorized defensive testing
+
+Run the automated test suite:
+
+```bash
+dotnet test
+```
+
 ## Out of Scope
 
 The public version intentionally excludes:
@@ -55,7 +70,7 @@ webshield-security-scanner/
 ├── .github/
 │   ├── FUNDING.yml           # GitHub Sponsors button configuration
 │   └── workflows/            # CI pipeline
-├── docs/                     # Architecture, roadmap, security scope
+├── docs/                     # Architecture, roadmap, testing, security scope
 ├── src/
 │   ├── WebShield.Cli/        # CLI entry point
 │   ├── WebShield.Core/       # Scanner engine and checks
