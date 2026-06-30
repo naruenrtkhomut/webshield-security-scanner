@@ -33,6 +33,50 @@ For every `Set-Cookie` header, WebShield checks:
 - `HttpOnly`
 - `SameSite`
 
+## CORS Policy
+
+WebShield inspects baseline CORS response headers:
+
+- `Access-Control-Allow-Origin`
+- `Access-Control-Allow-Credentials`
+
+| Condition | Finding | Initial severity |
+|---|---|---|
+| No baseline CORS headers | No CORS headers observed on homepage response | Info |
+| `Access-Control-Allow-Origin: *` with credentials enabled | Wildcard CORS origin allows credentials | High |
+| `Access-Control-Allow-Origin: *` without credentials | Wildcard CORS origin observed | Low |
+| Null origin appears allowed | CORS policy allows null origin | Medium |
+| Explicit non-wildcard CORS headers | CORS headers observed | Info |
+
+This is a baseline signal. API endpoints may have different CORS behavior and should be reviewed separately in authenticated and API-specific flows.
+
+## Information Disclosure Headers
+
+WebShield checks for common headers that may reveal server, framework, or generator details:
+
+- `Server`
+- `X-Powered-By`
+- `X-AspNet-Version`
+- `X-AspNetMvc-Version`
+- `X-Generator`
+
+| Condition | Finding | Initial severity |
+|---|---|---|
+| Disclosure header is present | Technology disclosure header observed | Low |
+| No common disclosure headers are present | No common technology disclosure headers observed | Info |
+
+## Cache Policy
+
+WebShield inspects the baseline response caching policy.
+
+| Condition | Finding | Initial severity |
+|---|---|---|
+| Missing `Cache-Control` | Missing Cache-Control header | Low |
+| Response sets cookies and appears publicly cacheable | Cookie-setting response may be publicly cacheable | Medium |
+| Explicit `Cache-Control` is present without the risky cookie/public combination | Cache-Control header observed | Info |
+
+Cache findings are baseline hardening signals. Sensitive, authenticated, and user-specific routes should be reviewed separately.
+
 ## Swagger/OpenAPI Exposure
 
 WebShield checks common documentation endpoints:
