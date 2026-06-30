@@ -85,7 +85,8 @@ public sealed class SecurityHeadersCheck : IWebSecurityCheck
         string description,
         string recommendation)
     {
-        if (response.Headers.Contains(headerName) || response.Content.Headers.Contains(headerName))
+        var contentHasHeader = response.Content?.Headers.Contains(headerName) ?? false;
+        if (response.Headers.Contains(headerName) || contentHasHeader)
         {
             return;
         }
